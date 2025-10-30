@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baraat Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Georgia:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+    <style>
+        :root {
+            --primary-color: #5a3825; /* Deep Brown */
+            --accent-color: #a38560; /* Soft Gold */
+            --bg-color: #fcf8f3; /* Off-White/Cream */
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Georgia', serif;
+            text-align:center;
+            background: var(--bg-color);
+            overflow-x:hidden;
+            transition: background 1.5s ease;
+            color: var(--primary-color);
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            opacity: 0;
+            transform: translateY(100vh);
+            transition: opacity 1.5s ease, transform 1.5s ease;
+            backface-visibility: hidden;
+        }
+
+        .page.active {
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+        }
+
+        /* --- PAGE 1: ARABIC, URDU, ENGLISH --- */
+        #arabic, #urdu, #english {
+            opacity:0;
+            transition:opacity 2s ease;
+            font-size: clamp(1.5rem, 8vw, 3.5rem); 
+            margin: 10px 0;
+            font-family: 'Playfair Display', serif;
+        }
+
+        #arabic {
+            font-size: clamp(2rem, 9vw, 4rem); 
+            margin-bottom: 20px;
+        }
+        
+        #urdu {
+            font-family: 'Noto Nastaliq Urdu', serif; 
+            direction: rtl; 
+            line-height: 1.5;
+            font-size: clamp(1.2rem, 6vw, 2.5rem); 
+        }
+        
+        #arabic.show, #urdu.show, #english.show { opacity:1; }
+        /* --- END PAGE 1 STYLES --- */
+
+
+        /* PAGE 2 - Fade-in and subtle float effect */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.5s ease, transform 1.5s ease;
+            font-size: clamp(1.2rem, 5vw, 2rem);
+            margin: 20px 0;
+        }
+        .fade-in.show { 
+            opacity: 1 !important; 
+            transform: translateY(0) !important; 
+        }
+        #salam { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 8vw, 3rem); }
+
+        /* --- SIMPLIFIED PAGE 3 STYLES --- */
+        .page3 h2 { 
+            color: var(--accent-color); 
+            margin-bottom: 30px; 
+            font-size: clamp(2rem, 8vw, 3.5rem); 
+            font-family: 'Playfair Display', serif;
+        }
+        .names {
+            margin: 40px 0;
+        }
+        .names p { 
+            font-size: clamp(1.1rem, 4vw, 1.8rem); 
+            margin: 10px 0; 
+            color: var(--primary-color); 
+            font-family: 'Playfair Display', serif;
+        }
+        .names strong {
+            font-size: 1.5em; 
+            font-weight: 700;
+            color: var(--accent-color);
+            display: block;
+            margin: 15px 0;
+        }
+        .names .conjunction {
+            font-size: 1.2rem;
+            color: #777;
+            font-style: italic;
+        }
+        /* --- END SIMPLIFIED PAGE 3 STYLES --- */
+
+
+        /* PAGE 4 - Details & Countdown (Styles Retained) */
+        .page4 h2 { 
+            color: var(--accent-color); 
+            margin-bottom: 25px; 
+            font-size: clamp(1.8rem, 7vw, 3rem); 
+            font-family: 'Playfair Display', serif;
+        }
+        .invitation p { 
+            font-size: clamp(1rem, 3.5vw, 1.3rem); 
+            margin: 15px 0; 
+            color: var(--primary-color); 
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(163, 133, 96, 0.3);
+        }
+        .invitation strong { color: var(--accent-color); }
+        .qr img { 
+            width: clamp(100px, 40vw, 200px); 
+            height: auto; 
+            margin-top: 30px; 
+            border: 4px solid var(--accent-color); 
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        /* NEW QR NOTE STYLE */
+        .qr-note {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-top: 15px; 
+            font-style: italic;
+            font-family: 'Georgia', serif; 
+        }
+
+        button {
+            margin-top: 40px;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            /* STARTS HIDDEN */
+            opacity: 0; 
+            transition: opacity 0.5s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'Playfair Display', serif;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        button.show { opacity:1; }
+
+        /* Countdown Styles */
+        #countdown {
+            display: flex;
+            justify-content: center;
+            gap: clamp(10px, 4vw, 30px);
+            margin: 30px 0;
+            padding: 15px;
+            background: rgba(163, 133, 96, 0.1); 
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.1;
+        }
+        .time-value {
+            font-size: clamp(1.8rem, 8vw, 3.5rem);
+            font-weight: 700;
+            color: var(--accent-color);
+            font-family: 'Playfair Display', serif;
+        }
+        .time-label {
+            font-size: clamp(0.7rem, 2.5vw, 1rem);
+            color: var(--primary-color);
+            text-transform: uppercase;
+        }
+        .footer { 
+            margin-top: 40px; 
+            font-size: 1.1rem; 
+            color: #666; 
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page page1 active" id="page1">
+    <div id="arabic">بِسْمِ اللّٰہِ الرَّحْمٰنِ الرَّحِیْمِ</div>
+    <div id="urdu">"شُروع اَللہ کے پاک نام سے جو بڑا مہر بان نہايت رحم والا ہے"</div>
+    <div id="english">In the name of Allah, the Most Gracious, the Most Merciful</div>
+</div>
+
+<div class="page page2" id="page2">
+    <div id="salam" class="fade-in">"السلام علیکم ورحمة الله وبرکاته"</div>
+    <div id="guestName" class="fade-in">Dear Respected Guests,</div>
+    <div id="message" class="fade-in">With immense joy and blessings, we invite you to join us in celebrating this precious union.</div>
+    <div id="invitationText" class="fade-in">Your presence will make this day truly special and memorable.</div>
+    <button id="nextBtn">View Invitation</button>
+</div>
+
+<div class="page page3" id="page3">
+    <h2>Baraat Invitation</h2>
+    <div class="names">
+        <p>The honor of your presence is requested at the wedding of</p>
+        <p><strong>M. Talha</strong></p>
+        <p>Son of M. Tariq</p>
+        <p class="conjunction">Weds</p>
+        <p><strong>Daughter of Niaz Ahmed</strong></p>
+    </div>
+    <div class="footer">
+        May Allah bless this union with love, happiness, and endless togetherness 💐
+    </div>
+    <button id="nextBtn3">Ceremony Details</button>
+</div>
+
+<div class="page page4" id="page4">
+    <h2>Baraat Ceremony Details</h2>
+    <div class="invitation">
+        <p><strong>Date:</strong> Firday, 28th November 2025</p>
+        <p><strong>Time:</strong> 8:00 PM onwards</p>
+        <p><strong>Venue:</strong> All Madina Inn, Orangi Town, Karachi</p>
+    </div>
+
+    <h3>Counting down to the big day!</h3>
+    <div id="countdown">
+        <div class="time-unit"><span id="days" class="time-value">00</span><span class="time-label">Days</span></div>
+        <div class="time-unit"><span id="hours" class="time-value">00</span><span class="time-label">Hours</span></div>
+        <div class="time-unit"><span id="minutes" class="time-value">00</span><span class="time-label">Minutes</span></div>
+        <div class="time-unit"><span id="seconds" class="time-value">00</span><span class="time-label">Seconds</span></div>
+    </div>
+    
+    <div class="qr">
+        <a href="https://ibb.co/2YW2gj87" target="_blank">
+            <img src="https://i.ibb.co/1J7V89sf/Whats-App-Image-2025-10-18-at-6-32-53-PM.jpg" alt="Whats-App-Image-2025-10-18-at-6-32-53-PM" border="0" />
+        </a>
+    </div>
+    <p class="qr-note">
+        **Heads up!** Scan the code above for the **exact location** on Google Maps. 🗺️
+    </p>
+
+    <div class="footer">We look forward to celebrating this blessed occasion with you ✨</div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // Target date: December 15, 2025, 8:00 PM (20:00)
+        const countdownDate = new Date("Nov 28, 2025 20:00:00").getTime();
+
+        // --- Countdown Functionality ---
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            if (document.getElementById("days")) {
+                 if (distance < 0) {
+                     clearInterval(countdownInterval); 
+                     document.getElementById("countdown").innerHTML = "<h3 style='color:var(--accent-color);'>The Baraat Has Begun!</h3>";
+                 } else {
+                     document.getElementById("days").innerHTML = days < 10 ? '0' + days : days;
+                     document.getElementById("hours").innerHTML = hours < 10 ? '0' + hours : hours;
+                     document.getElementById("minutes").innerHTML = minutes < 10 ? '0' + minutes : minutes;
+                     document.getElementById("seconds").innerHTML = seconds < 10 ? '0' + seconds : seconds;
+                 }
+            }
+        }
+
+        // --- Main Script Execution ---
+        const arabic = document.getElementById("arabic");
+        const urdu = document.getElementById("urdu");
+        const english = document.getElementById("english");
+        const pages = {
+            1: document.getElementById("page1"),
+            2: document.getElementById("page2"),
+            3: document.getElementById("page3"),
+            4: document.getElementById("page4")
+        };
+        const nextBtn = document.getElementById("nextBtn");
+        const nextBtn3 = document.getElementById("nextBtn3");
+        const page2Elements = ["salam", "guestName", "message", "invitationText"].map(id => document.getElementById(id));
+        
+        let countdownInterval; 
+
+        // Function to handle page transitions
+        function transitionPage(currentPage, nextPage, callback) {
+            if (currentPage) {
+                currentPage.classList.remove("active");
+                currentPage.style.transform = "translateY(-100vh)";
+                currentPage.style.opacity = "0";
+            }
+            
+            setTimeout(() => {
+                document.body.style.background = getComputedStyle(nextPage).getPropertyValue('--bg-color');
+                nextPage.style.transform = "translateY(100vh)"; 
+                nextPage.style.opacity = "0";
+                nextPage.classList.add("active");
+                nextPage.style.transform = "translateY(0)";
+                nextPage.style.opacity = "1";
+
+                if (callback) {
+                    setTimeout(callback, 500);
+                }
+            }, 1000);
+        }
+
+        // --- Page 1 Animation (Staggered 3-Step) ---
+        setTimeout(() => arabic.classList.add("show"), 1500);
+        setTimeout(() => urdu.classList.add("show"), 3500);
+        setTimeout(() => english.classList.add("show"), 5500);
+
+        // --- Page 1 to Page 2 Transition ---
+        setTimeout(() => {
+            transitionPage(pages[1], pages[2], () => {
+                page2Elements.forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add("show");
+                        // 🌟 FIX: SHOW PAGE 2 BUTTON AFTER THE LAST TEXT FADES IN
+                        if (index === page2Elements.length - 1) {
+                            setTimeout(() => nextBtn.classList.add("show"), 1200); 
+                        }
+                    }, index * 1200); 
+                });
+            });
+        }, 8000); 
+
+        // --- Page 2 to Page 3 ---
+        nextBtn.addEventListener("click", () => {
+            transitionPage(pages[2], pages[3], () => {
+                 // 🌟 FIX: SHOW PAGE 3 BUTTON AFTER TRANSITION
+                nextBtn3.classList.add("show");
+            });
+        });
+
+        // --- Page 3 to Page 4 ---
+        nextBtn3.addEventListener("click", () => {
+            transitionPage(pages[3], pages[4], () => {
+                 updateCountdown();
+                 countdownInterval = setInterval(updateCountdown, 1000);
+            });
+        });
+    }); 
+</script>
+</body>
+</html>
