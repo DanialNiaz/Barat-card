@@ -14,12 +14,19 @@
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
+
+        /* 🔒 Lock viewport & remove scroll */
+        html, body {
+            height: 100%;
+            overflow: hidden;        /* no scrolling on any device */
+        }
+
         body {
             font-family: 'Georgia', serif;
             text-align:center;
             background: var(--bg-color);
-            transition: background 1.5s ease;
             color: var(--primary-color);
+            transition: background 1.5s ease;
         }
 
         .page {
@@ -27,7 +34,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            min-height: 100vh;
+            height: 100vh;          /* exactly viewport height */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -37,13 +44,12 @@
             transform: translateY(100vh);
             transition: opacity 1.5s ease, transform 1.5s ease;
             backface-visibility: hidden;
-            overflow: hidden;
         }
 
         .page.active {
             opacity: 1;
             transform: translateY(0);
-            position: relative;
+            /* removed position: relative; so it stays absolute and doesn't add page height */
         }
 
         /* --- PAGE 1: ARABIC, URDU, ENGLISH --- */
@@ -69,7 +75,6 @@
         
         #arabic.show, #urdu.show, #english.show { opacity:1; }
         /* --- END PAGE 1 STYLES --- */
-
 
         /* PAGE 2 - Fade-in and subtle float effect */
         .fade-in {
@@ -115,7 +120,6 @@
         }
         /* --- END SIMPLIFIED PAGE 3 STYLES --- */
 
-
         /* PAGE 4 - Details & Countdown (Styles Retained) */
         .page4 h2 { 
             color: var(--accent-color); 
@@ -123,6 +127,12 @@
             font-size: clamp(1.8rem, 7vw, 3rem); 
             font-family: 'Playfair Display', serif;
         }
+        .page4 {
+    justify-content: flex-start;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    overflow-y: auto;   /* scroll only inside page 4 if needed */
+}
         .invitation p { 
             font-size: clamp(1rem, 3.5vw, 1.3rem); 
             margin: 15px 0; 
@@ -139,7 +149,6 @@
             border-radius: 15px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        /* NEW QR NOTE STYLE */
         .qr-note {
             font-size: 1.1rem;
             color: var(--primary-color);
@@ -157,7 +166,6 @@
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            /* STARTS HIDDEN */
             opacity: 0; 
             transition: opacity 0.5s ease, transform 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
